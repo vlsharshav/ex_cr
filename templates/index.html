@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AC Placement Optimization</title>
+</head>
+<body>
+    <h1>Room AC Placement Optimization</h1>
+
+    <form method="POST">
+        <label>Room Length (m):</label>
+        <input type="number" name="room_length" required /><br/>
+
+        <label>Room Width (m):</label>
+        <input type="number" name="room_width" required /><br/>
+
+        <label>Room Height (m):</label>
+        <input type="number" name="room_height" required /><br/>
+
+        <label>Number of ACs:</label>
+        <input type="number" name="num_acs" required /><br/>
+
+        <h3>User AC Positions</h3>
+        <p>(Provide positions for each AC as x, y, z)</p>
+        <div id="ac_positions_container"></div>
+
+        <h3>Windows</h3>
+        <label>Window Count:</label>
+        <input type="number" name="window_count" id="window_count" value="0" min="0" required /><br/>
+        <div id="window_positions_container"></div>
+
+        <h3>Doors</h3>
+        <label>Door Count:</label>
+        <input type="number" name="door_count" id="door_count" value="0" min="0" required /><br/>
+        <div id="door_positions_container"></div>
+
+        <button type="submit">Run Optimization</button>
+    </form>
+
+    {% if image_path %}
+    <hr/>
+    <h2>Results</h2>
+    <img src="{{ url_for('static', filename='room_layout.png') }}" alt="Room Layout" style="max-width: 100%; height: auto; border: 1px solid #ccc;" />
+    <p><strong>Initial Energy Efficiency:</strong> {{ initial_efficiency }}</p>
+    <p><strong>Optimized Energy Efficiency:</strong> {{ optimized_efficiency }}</p>
+    <p><strong>Initial Fitness:</strong> {{ initial_fitness }}</p>
+    <p><strong>Optimized Fitness:</strong> {{ optimized_fitness }}</p>
+    {% endif %}
+
+    <script>
+    // Dynamically create input fields for AC, windows, doors based on counts
+
+    const acCountInput = document.querySelector('input[name="num_acs"]');
+    const acContainer = document.getElementById('ac_positions_container');
+    const windowCountInput = document.getElementById('window_count');
+    const windowContainer = document.getElementById('window_positions_container');
+    const doorCountInput = document.getElementById('door_count');
+    const doorContainer = document.getElementById('door_positions_container');
+
+    function createPositionInputs(container, prefix, count) {
+        container.innerHTML = '';
+        for(let i=0; i<count; i++) {
+            container.innerHTML += `
+                <div>
+                    <label>${prefix.toUpperCase()} ${i+1} X:</label>
+                    <input type="number" name="${prefix}_x_${i}" required />
+                    <label>Y:</label>
+                    <input type="number" name="${prefix}_y_${i}" required />
+                    <label>Z:</label>
+                    <input type="number" name="${prefix}_z_${i}" required />
+                </div>
+            `;
+        }
+    }
+
+    acCountInput.addEventListener('input', () => {
+        const count = parseInt(acCountInput.value) || 0;
+        createPositionInputs(acContainer, 'ac', count);
+    });
+
+    windowCountInput.addEventListener('input', () => {
+        const count = parseInt(windowCountInput.value) || 0;
+        createPositionInputs(windowContainer, 'window', count);
+    });
+
+    doorCountInput.addEventListener('input', () => {
+        const count = parseInt(doorCountInput.value) || 0;
+        createPositionInputs(doorContainer, 'door', count);
+    });
+
+    // Initialize if page reloads with values
+    if(acCountInput.value) createPositionInputs(acContainer, 'ac', parseInt(acCountInput.value));
+    if(windowCountInput.value) createPositionInputs(windowContainer, 'window', parseInt(windowCountInput.value));
+    if(doorCountInput.value) createPositionInputs(doorContainer, 'door', parseInt(doorCountInput.value));
+    </script>
+</body>
+</html>

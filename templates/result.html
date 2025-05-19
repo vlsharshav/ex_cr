@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Optimization Results</title>
+</head>
+<body>
+    <h1>Optimized AC Placement Result</h1>
+
+    <img src="{{ url_for('static', filename='room_layout.png') }}" alt="Room Layout" style="max-width: 100%; height: auto; border: 1px solid #ccc;" />
+    <p><strong>Initial Energy Efficiency:</strong> {{ initial_efficiency }}</p>
+    <p><strong>Optimized Energy Efficiency:</strong> {{ optimized_efficiency }}</p>
+    <p><strong>Initial Fitness:</strong> {{ initial_fitness }}</p>
+    <p><strong>Optimized Fitness:</strong> {{ optimized_fitness }}</p>
+
+    <a href="{{ url_for('index') }}">Go Back</a>
+</body>
+</html>
